@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>I’m Sorry</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+
+body{
+    height:100vh;
+    background:radial-gradient(circle at top,#1b1035,#000);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    overflow:hidden;
+}
+
+/* stars + hearts */
+.star,.heart{
+    position:absolute;
+    animation:float linear infinite;
+    opacity:.8;
+}
+.star{
+    width:2px;height:2px;background:white;
+}
+.heart{
+    font-size:14px;color:#ff7aa2;
+}
+
+@keyframes float{
+    from{transform:translateY(100vh);}
+    to{transform:translateY(-10vh);}
+}
+
+.container{
+    text-align:center;
+    width:100%;
+    max-width:420px;
+    padding:20px;
+    z-index:2;
+}
+
+.line{
+    font-size:22px;
+    margin-bottom:18px;
+    opacity:0;
+    animation:fadeUp 1.2s ease forwards;
+}
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(20px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+.typing{
+    font-size:18px;
+    color:#aaa;
+    margin-bottom:20px;
+}
+
+.photo{
+    width:120px;height:120px;
+    margin:20px auto;
+    border-radius:50%;
+    overflow:hidden;
+    border:3px solid rgba(255,255,255,.4);
+    display:none;
+}
+.photo img{width:100%;height:100%;object-fit:cover;}
+
+button{
+    margin-top:25px;
+    padding:12px 26px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(135deg,#ff6a88,#ff99ac);
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.skip{
+    position:fixed;
+    top:20px;right:20px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.2);
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+/* popup */
+.popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:3;
+}
+.popup-box{
+    background:#111;
+    padding:25px;
+    border-radius:16px;
+    text-align:center;
+    max-width:300px;
+}
+.popup-box p{margin-bottom:15px;color:#ddd;}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<button class="skip" onclick="skipStory()">Skip ⏭️</button>
+
+<div class="container">
+    <div id="typing" class="typing">typing…</div>
+    <div id="story"></div>
+
+    <div class="photo" id="photo">
+        <img src="photo.jpg" alt="Her Photo">
+    </div>
+
+    <button id="finalBtn" style="display:none" onclick="openPopup()">
+        Can we be okay again? 🤍
+    </button>
+</div>
+
+<div class="popup" id="popup">
+    <div class="popup-box">
+        <p>
+            Thank you for reading everything 🤍  
+            I really hope you have forgiven me.
+        </p>
+        <button onclick="redirectChat()">Message Me</button>
+    </div>
+</div>
+
+<script>
+/* stars + hearts */
+for(let i=0;i<40;i++){
+    let s=document.createElement("div");
+    s.className="star";
+    s.style.left=Math.random()*100+"vw";
+    s.style.animationDuration=3+Math.random()*5+"s";
+    document.body.appendChild(s);
+}
+for(let i=0;i<15;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤";
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDuration=4+Math.random()*6+"s";
+    document.body.appendChild(h);
+}
+
+/* story */
+const lines=[
+ "Hey…",
+ "Things aren’t okay right now.",
+ "Mujhse galti ho gayi.",
+ "Bina soche, bina samjhe.",
+ "Tumhe hurt karna kabhi mera intention nahi tha.",
+ "I truly regret it.",
+    "Mujhe maaf kar do please.",
+ "— For you, ❤️"
+];
+
+let i=0;
+const story=document.getElementById("story");
+const typing=document.getElementById("typing");
+const photo=document.getElementById("photo");
+const btn=document.getElementById("finalBtn");
+const music=document.getElementById("music");
+
+function showLine(){
+    if(i<lines.length){
+        typing.style.display="block";
+        setTimeout(()=>{
+            typing.style.display="none";
+            let d=document.createElement("div");
+            d.className="line";
+            d.innerText=lines[i];
+            story.appendChild(d);
+            i++;
+            setTimeout(showLine,1400);
+        },800);
+    }else{
+        photo.style.display="block";
+        btn.style.display="inline-block";
+    }
+}
+showLine();
+
+function skipStory(){
+    story.innerHTML="";
+    lines.forEach(t=>{
+        let d=document.createElement("div");
+        d.className="line";
+        d.innerText=t;
+        d.style.opacity=1;
+        story.appendChild(d);
+    });
+    typing.style.display="none";
+    photo.style.display="block";
+    btn.style.display="inline-block";
+}
+
+/* popup + redirect */
+function openPopup(){
+    document.getElementById("popup").style.display="flex";
+}
+function redirectChat(){
+    // CHANGE NUMBER 👇 (with country code, no +)
+    window.location.href="https://wa.me/9306501103";
+}
+
+/* music on first tap */
+document.body.addEventListener("click",()=>{
+    music.play().catch(()=>{});
+},{once:true});
+</script>
+
+</body>
+</html>
